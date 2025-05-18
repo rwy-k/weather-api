@@ -1,0 +1,46 @@
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web-container
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    networks:
+      - app_network
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=subscription_db
+      - DB_PORT=3306
+
+  db:
+    image: mysql:latest
+    restart: always
+    container_name: db-container
+    environment:
+      MYSQL_DATABASE: subscription_db 
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3  
+
+volumes:
+  db_data: 
+
+networks:
+  app_network:
+    driver: bridge
