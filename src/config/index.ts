@@ -1,15 +1,16 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-// Load environment variables from .env file
-const envPath = path.join(__dirname, '../../.env');
-console.log('Loading .env file from:', envPath);
-const result = dotenv.config({ path: envPath });
+if (process.env.NODE_ENV !== 'production') {
+  const envPath = path.join(__dirname, '../../.env');
+  console.log('Loading .env file from:', envPath);
+  const result = dotenv.config({ path: envPath });
 
-if (result.error) {
-  console.error('Error loading .env file:', result.error);
-} else {
-  console.log('Environment variables loaded successfully');
+  if (result.error) {
+    console.error('Error loading .env file:', result.error);
+  } else {
+    console.log('Environment variables loaded successfully');
+  }
 }
 
 export const config = {
@@ -29,18 +30,22 @@ export const config = {
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
   email: {
     sendgridApiKey: process.env.SENDGRID_API_KEY,
-    sender: process.env.EMAIL_SENDER || 'noreply@yourdomain.com'
+    sender: process.env.EMAIL_SENDER
   }
 };
 
 // Required environment variables
 const requiredEnvVars = [
   'SENDGRID_API_KEY',
-  'EMAIL_SENDER'
+  'EMAIL_SENDER',
+  'WEATHER_API_KEY'
 ];
 
-const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+// Only check required vars in production
+if (process.env.NODE_ENV === 'production') {
+  const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
 
-if (missingEnvVars.length > 0) {
-  throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+  if (missingEnvVars.length > 0) {
+    throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+  }
 } 
