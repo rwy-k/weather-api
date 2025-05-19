@@ -61,3 +61,9 @@ To run the application in a Docker container, follow these steps:
 - `POST /api/v1/subscription/subscribe` - Create new subscription
 - `GET /api/v1/subscription/confirm/:token` - Confirm subscription
 - `GET /api/v1/subscription/unsubscribe/:token` - Unsubscribe
+
+## Web
+You can try out this API by visiting `http://56.228.24.54/` in your browser.
+
+## P.S.
+The sended email with token could be in a spam folder. Please check it.

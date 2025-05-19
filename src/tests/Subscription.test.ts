@@ -8,7 +8,16 @@ jest.mock('../db');
 jest.mock('../models/Email');
 jest.mock('../config', () => ({
   config: {
-    frontendUrl: 'http://localhost:3000'
+    frontendUrl: 'http://localhost:3000',
+    email: {
+      sender: 'test@test.com'
+    },
+    database: {
+      host: 'localhost',
+      user: 'root',
+      password: 'password',
+      database: 'test_db'
+    }
   }
 }));
 jest.mock('crypto', () => ({

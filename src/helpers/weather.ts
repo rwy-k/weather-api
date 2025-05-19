@@ -12,6 +12,17 @@ export const getWeather: RequestHandler = async (req: Request, res: Response) =>
         return;
     }
 
+    // Return mock data in development mode
+    if (config.weather.apiKey === 'development') {
+        const mockWeather: Weather = {
+            temperature: 20,
+            humidity: 65,
+            description: 'Mock weather data'
+        };
+        res.json(mockWeather);
+        return;
+    }
+
     try {
         const weatherResponse = await axios.get(`${WEATHER_API}?key=${config.weather.apiKey}&q=${city}`)
         console.log(`Fetching weather for city: ${city}`, weatherResponse.data); 

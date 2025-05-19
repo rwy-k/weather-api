@@ -1,6 +1,5 @@
 import express from 'express';
 import { weatherRouter, subscriptionRouter } from "./routes";
-import { config } from './config';
 import path from 'path';
 
 const app = express();

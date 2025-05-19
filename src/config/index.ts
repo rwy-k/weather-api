@@ -18,7 +18,7 @@ export const config = {
     port: process.env.PORT || 3000
   },
   weather: {
-    apiKey: process.env.WEATHER_API_KEY
+    apiKey: process.env.WEATHER_API_KEY || 'development'
   },
   database: {
     host: process.env.DB_HOST || 'localhost',
@@ -27,25 +27,23 @@ export const config = {
     database: process.env.DB_NAME || 'subscription_db',
     port: parseInt(process.env.DB_PORT || '3306')
   },
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+  frontendUrl: process.env.FRONTEND_URL || 'http://56.228.24.54/',
   email: {
-    sendgridApiKey: process.env.SENDGRID_API_KEY,
-    sender: process.env.EMAIL_SENDER
+    sendgridApiKey: process.env.SENDGRID_API_KEY || 'development',
+    sender: process.env.EMAIL_SENDER || 'noreply@example.com'
   }
 };
 
-// Required environment variables
-const requiredEnvVars = [
-  'SENDGRID_API_KEY',
-  'EMAIL_SENDER',
-  'WEATHER_API_KEY'
-];
-
 // Only check required vars in production
 if (process.env.NODE_ENV === 'production') {
-  const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+  const requiredEnvVars = [];
+  
+  // Add database variables
+  if (!config.database.user || !config.database.password) {
+    requiredEnvVars.push('DB_USER', 'DB_PASSWORD');
+  }
 
-  if (missingEnvVars.length > 0) {
-    throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+  if (requiredEnvVars.length > 0) {
+    throw new Error(`Missing required environment variables: ${requiredEnvVars.join(', ')}`);
   }
 } 
